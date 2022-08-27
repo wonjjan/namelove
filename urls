@@ -1,0 +1,22 @@
+from django.urls import path, include
+from . import views
+
+urlpatterns = [
+    path("main/", views.main, name="main"),
+    path("google/", views.google, name="google"),
+    path("delete/", views.delete, name="delete"),
+    path("youtube/", views.youtube, name="youtube"),
+    path("naver/", views.naver, name="naver"),
+    path("pot/", views.pot, name="pot"),
+    path("namelo/", views.namelo, name="namelo"),
+    path("name1/", views.name1, name="name1"),
+    path("elect/", views.elect, name="elect"),
+    path("lol/", views.lol, name="lol"),
+    path("movie/", views.movie, name="movie"),
+    path("rocket/", views.rocket, name="rocket"),
+    path("shit/", views.shit, name="shit"),
+    path("snake/", views.snake, name="snake"),
+    path("type1/", views.type1, name="type1"),
+    path("type2/", views.type2, name="type2"),
+    path("webtoon/", views.webtoon, name="webtoon")
+]
