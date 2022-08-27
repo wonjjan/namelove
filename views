@@ -1,0 +1,133 @@
+
+tex = {
+    ' ' : 0,
+    'ㄱ' : 1,
+    'ㄴ' : 1,
+    'ㅇ' : 1,
+    'ㄷ' : 2,
+    'ㄲ' : 2,
+    'ㅋ' : 2,
+    'ㅈ' : 2,
+    'ㅅ' : 2,
+    'ㄹ' : 3,
+    'ㅁ' : 3,
+    'ㅊ' : 3,
+    'ㅌ' : 3,
+    'ㅎ' : 3,
+    'ㅂ' : 4,
+    'ㅉ' : 4,
+    'ㅆ' : 4,
+    'ㄸ' : 4,
+    'ㅍ' : 4,
+    'ㅡ' : 1,
+    'ㅣ' : 1,
+    'ㅏ' : 2,
+    'ㅢ' : 2,
+    'ㅜ' : 2,
+    'ㅗ' : 2,
+    'ㅓ' : 2,
+    'ㅐ' : 3,
+    'ㅔ' : 3,
+    'ㅚ' : 3,
+    'ㅟ' : 3,
+    'ㅕ' : 3,
+    'ㅟ' : 3,
+    'ㅠ' : 3,
+    'ㅛ' : 3,
+    'ㅘ' : 4,
+    'ㅒ' : 4,
+    'ㅖ' : 4,
+    'ㅝ' : 4,
+    'ㅙ' : 5,
+    'ㅞ' : 5,
+}
+# 초성 리스트. 00 ~ 18
+CHOSUNG_LIST = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ']
+# 중성 리스트. 00 ~ 20
+JUNGSUNG_LIST = ['ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ']
+# 종성 리스트. 00 ~ 27 + 1(1개 없음)
+JONGSUNG_LIST = [' ', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ', 'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ']
+
+def korean_to_be_englished(korean_word):
+    r_lst = []
+    for w in list(korean_word.strip()):
+        ## 영어인 경우 구분해서 작성함. 
+        if '가'<=w<='힣':
+            ## 588개 마다 초성이 바뀜. 
+            ch1 = (ord(w) - ord('가'))//588
+            ## 중성은 총 28가지 종류
+            ch2 = ((ord(w) - ord('가')) - (588*ch1)) // 28
+            ch3 = (ord(w) - ord('가')) - (588*ch1) - 28*ch2
+            r_lst.append([CHOSUNG_LIST[ch1], JUNGSUNG_LIST[ch2], JONGSUNG_LIST[ch3]])
+        else:
+            r_lst.append([w])
+    return r_lst
+
+n_soo = []
+
+a = 0
+
+good = 0
+
+ff_n = 0
+fs_n = 0
+ft_n = 0
+
+f_n = 0
+s_n = 0
+t_n = 0
+
+search = []
+g_link = []
+y_link = []
+n_link = []
+
+def pot(request):
+    return render(request, "gyn/pot.html")
+
+def namelo(request):
+    global good
+    a = 0
+    ff_n = 0
+    fs_n = 0
+    ft_n = 0
+
+    f_n = 0
+    s_n = 0
+    t_n = 0
+    if request.method == "POST":
+        n = request.POST.get("myn")
+        fn = request.POST.get("frn")
+        for i in korean_to_be_englished(fn):
+            for z in i:
+                z = tex[z]
+                a += 1
+                if a < 4:
+                    ff_n += z
+                elif 4<= a < 7:
+                    fs_n += z
+                else:
+                    ft_n += z
+            
+        a = 0
+
+        for i in korean_to_be_englished(n):
+            for z in i:
+                z = tex[z]
+                a += 1
+                if a < 4:
+                    f_n += z
+                elif 4<= a < 7:
+                    s_n += z
+                else:
+                    t_n += z
+        good = (((f_n + ff_n) + (ff_n + s_n))  + ((ff_n + s_n) + (s_n + fs_n)) + ((ff_n + s_n) + (s_n + fs_n)) + ((fs_n + t_n) + (t_n + ft_n)))
+        return redirect("name1")
+    return render(request, "gyn/namelove.html")
+
+def name1(request):
+    global good
+    context = {
+        "good" : good
+    }
+    return render(request, "gyn/name1.html", context)
