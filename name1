@@ -1,6 +1,12 @@
-<h1>궁합테스트 결과!</h1>
+{% extends 'base.html' %}
 
-<a>{{ good }}% </a>
 
-<a href="{% url 'namelo' %}"><button>한번 더하기!</button></a>
-<a href="{% url 'pot' %}"><button>처음화면</button></a>
+{% block con %}
+    <div class="container mt-5">
+        <h1>궁합테스트 결과!</h1>
+        <hr>
+
+        <a>{{ good }}% </a>
+        <a href="{% url 'namelove' %}"><button>한번 더하기!</button></a>
+    </div>
+{% endblock %}
